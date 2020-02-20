@@ -8,7 +8,11 @@
 <div>
     {{ range $post := .Posts }}
         <div>
-            <h2>{{ $post.Title }}</h2>
+            <h2>
+                <a href="/posts/{{ $post.ID }}">
+                    {{ $post.Title }}
+                </a>
+            </h2>
             <p>{{ $post.Content }}</p>
         </div>
     {{ end }}
