@@ -3,8 +3,10 @@ package contollers
 import (
 	"../models"
 	"fmt"
+	"github.com/gorilla/mux"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 func PostsList(writer http.ResponseWriter, request *http.Request) {
@@ -22,14 +24,17 @@ func PostsList(writer http.ResponseWriter, request *http.Request) {
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
-	// TODO: move path to config
+	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
+	if err != nil {
+		fmt.Println(err)
+	}
 	templ, err := template.ParseFiles("templates/default/post/view.html")
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	post, err := models.GetPostById(1)
-
+	post, err := models.GetPostById(ID)
+	// TODO: handle not found
 	if err != nil {
 		fmt.Println(err)
 	}

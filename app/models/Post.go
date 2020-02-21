@@ -3,7 +3,7 @@ package models
 import "errors"
 
 type Post struct {
-	ID      int32
+	ID      uint64
 	Title   string
 	Content string
 }
@@ -18,7 +18,7 @@ func GetAllPosts() []*Post {
 	return posts
 }
 
-func GetPostById(ID int32) (*Post, error) {
+func GetPostById(ID uint64) (*Post, error) {
 	// TODO: make real
 	for i := range posts {
 		if posts[i].ID == ID {
