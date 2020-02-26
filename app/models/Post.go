@@ -1,6 +1,11 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+)
+import "../core"
 
 type Post struct {
 	ID      uint64
@@ -14,7 +19,26 @@ var posts = []*Post{
 }
 
 func GetAllPosts() []*Post {
-	// TODO: make real
+	rows, err := core.GetDB().Query("select id, title, content from posts")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rows.Close()
+
+	posts := make([]*Post, 0)
+	for rows.Next() {
+		post := new(Post)
+		err := rows.Scan(&post.ID, &post.Title, &post.Content)
+		if err != nil {
+			panic(err)
+		}
+
+		posts = append(posts, post)
+	}
+	if err = rows.Err(); err != nil {
+		fmt.Println(err)
+	}
+
 	return posts
 }
 
