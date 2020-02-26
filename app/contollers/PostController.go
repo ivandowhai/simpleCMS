@@ -2,6 +2,7 @@ package contollers
 
 import (
 	"../models"
+	"../repositories/post"
 	"fmt"
 	"github.com/gorilla/mux"
 	"html/template"
@@ -18,7 +19,7 @@ func PostsList(writer http.ResponseWriter, request *http.Request) {
 
 	data := struct {
 		Posts []*models.Post
-	}{Posts: models.GetAllPosts()}
+	}{Posts: post.GetAll()}
 
 	templ.Execute(writer, data)
 }
