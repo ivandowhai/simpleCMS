@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # ports from container exposed to the docker machine and the guest machine
+    ports:
+      # 80 on the host, 8080 on the guest. Websever listens on 8080
+      - "89:9000" # http
+      - "444:443" # https
+    # file with environment declarations for the container
+#    env_file:
+#      - .env
+    # Link to containers in another service
+    links:
+      - mysql
+    # sync workspace folder with /go
+    volumes:
+      - ${PROJECT_PATH}:/go/cms
+    environment:
+      - "DB_PORT=3307"
+      - "DB_HOST=mysql"
+      - "DB_NAME=cms"
+      - "DB_PASS=gotest"
+
+  mysql:
+    build:
+      context: .
+      dockerfile: Database
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_USER: gotest
+      MYSQL_PASSWORD: gotest
+      MYSQL_ROOT_PASSWORD: gotest
+      MYSQL_DATABASE: local_gotest
+      # sync folders. MySQL data is stored outside container so that rebuilding doesn't clear db.
+      # folder is at workspace root.
+    volumes:
+      - ../_local_mysql_data:/var/lib/mysql
