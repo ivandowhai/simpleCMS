@@ -1,4 +1,4 @@
 .idea
 cms
 _local_mysql_data
-docker/.env
+.env

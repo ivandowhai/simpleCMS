@@ -11,4 +11,10 @@ RUN apt-get update -y && \
 
 RUN go get github.com/gorilla/mux && go get github.com/go-sql-driver/mysql
 
-RUN cd /go && mkdir cms && cd cms && ls
+COPY ${PROJECT_PATH} /go/cms
+
+RUN cd /go/cms && go build
+
+EXPOSE 8080
+
+CMD ["./cms"]
