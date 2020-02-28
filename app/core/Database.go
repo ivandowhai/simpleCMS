@@ -5,12 +5,11 @@ import (
 	"fmt"
 )
 
-//TODO: to config
-var DataSourceName string = "root:gotest@tcp(127.0.0.1:3307)/cms"
-var Driver string = "mysql"
-
 func GetDB() *sql.DB {
-	db, err := sql.Open(Driver, DataSourceName)
+	var settings *Settings = GetSettings()
+	var dataSourceName string = settings.DB.User + ":" + settings.DB.Password + "@" + settings.DB.Host + "/" + settings.DB.Name
+
+	db, err := sql.Open(settings.DB.Driver, dataSourceName)
 	if err != nil {
 		fmt.Println(err)
 	}

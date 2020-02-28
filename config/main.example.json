@@ -1,0 +1,9 @@
+{
+  "db": {
+    "driver": "mysql",
+    "user": "root",
+    "password": "gotest",
+    "host": "tcp(127.0.0.1:3307)",
+    "name": "cms"
+  }
+}
