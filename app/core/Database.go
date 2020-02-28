@@ -7,9 +7,9 @@ import (
 
 func GetDB() *sql.DB {
 	var settings *Settings = GetSettings()
-	var dataSourceName string = settings.DB.User + ":" + settings.DB.Password + "@" + settings.DB.Host + "/" + settings.DB.Name
+	var dataSourceName string = settings.DBUser + ":" + settings.DBPassword + "@" + settings.DBHost + "/" + settings.DBName
 
-	db, err := sql.Open(settings.DB.Driver, dataSourceName)
+	db, err := sql.Open(settings.DBDriver, dataSourceName)
 	if err != nil {
 		fmt.Println(err)
 	}
