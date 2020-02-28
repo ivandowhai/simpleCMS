@@ -13,7 +13,7 @@ RUN go get github.com/gorilla/mux && go get github.com/go-sql-driver/mysql
 
 COPY ${PROJECT_PATH} /go/cms
 
-RUN cd /go/cms && go build
+RUN cd /go/cms && go build && chmod 7770 cms
 
 EXPOSE 8080
 
