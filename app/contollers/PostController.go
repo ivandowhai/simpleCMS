@@ -34,7 +34,7 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 		fmt.Println(err)
 	}
 
-	post, err := models.GetPostById(ID)
+	post, err := post.GetOne(ID)
 	// TODO: handle not found
 	if err != nil {
 		fmt.Println(err)

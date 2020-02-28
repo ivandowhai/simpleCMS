@@ -6,7 +6,7 @@ import (
 )
 
 //TODO: to config
-var DataSourceName string = "root:gotest@/cms"
+var DataSourceName string = "root:gotest@tcp(127.0.0.1:3307)/cms"
 var Driver string = "mysql"
 
 func GetDB() *sql.DB {
