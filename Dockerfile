@@ -17,4 +17,5 @@ RUN cd /go/cms && go build && chmod 7770 cms
 
 EXPOSE 8080
 
+WORKDIR  /go/cms
 CMD ["./cms"]
