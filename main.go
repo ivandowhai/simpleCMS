@@ -15,6 +15,8 @@ func main() {
 	r.HandleFunc("/posts/{postId}", contollers.ViewPost)
 	r.HandleFunc("/register", auth.RegisterPage)
 	r.HandleFunc("/register-submit", auth.Register)
+	r.HandleFunc("/login", auth.LoginPage)
+	r.HandleFunc("/login-submit", auth.Login)
 	http.Handle("/", r)
 	http.ListenAndServe(":8080", nil)
 }

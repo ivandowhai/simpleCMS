@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-func GetByEmailAndPassword(email string, password string) (*models.User, error) {
-	row := core.GetDB().QueryRow("select id, name, email, role from users where email = :email and password = :password", email, password)
+func GetByEmail(email string) (*models.User, error) {
+	row := core.GetDB().QueryRow("select id, name, email, role from users where email = :email", email)
 
 	user := new(models.User)
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Role)
