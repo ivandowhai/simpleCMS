@@ -7,7 +7,7 @@ import (
 )
 
 func CreateUser(user models.User) {
-	_, err := core.GetDB().Exec("insert into users set name = :name, email = :email, password := password, role = :role", user)
+	_, err := core.GetDB().Exec("insert into users (name, email, password, role) values (?, ?, ?, ?)", user.Name, user.Email, user.Password, user.Role)
 	if err != nil {
 		fmt.Println(err)
 	}
