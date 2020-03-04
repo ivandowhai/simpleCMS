@@ -1,7 +1,5 @@
 FROM golang
 
-EXPOSE 8080 80 443
-
 # Set pwd to the go folder
 WORKDIR ${GOPATH}
 

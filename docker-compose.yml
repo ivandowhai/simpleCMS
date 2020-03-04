@@ -8,7 +8,7 @@ services:
     # ports from container exposed to the docker machine and the guest machine
     ports:
       # 80 on the host, 8080 on the guest. Websever listens on 8080
-      - "89:8080" # http
+      - "8080:8080" # http
       - "444:443" # https
     # file with environment declarations for the container
 #    env_file:
