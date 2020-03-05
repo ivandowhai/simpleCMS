@@ -3,5 +3,6 @@
   "db_user": "root",
   "db_password": "gotest",
   "db_host": "tcp(127.0.0.1:3307)",
-  "db_name": "cms"
+  "db_name": "cms",
+  "template": "default"
 }

@@ -5,15 +5,11 @@ import (
 	"../../models"
 	"../../repositories/user"
 	"fmt"
-	"html/template"
 	"net/http"
 )
 
 func ProfilePage(writer http.ResponseWriter, request *http.Request) {
-	templ, err := template.ParseFiles("templates/default/profile/index.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+	templ := core.GetView("profile/index")
 
 	session, err := core.Store.Get(request, "user")
 	if err != nil {

@@ -5,15 +5,11 @@ import (
 	"../../repositories/user"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
-	"html/template"
 	"net/http"
 )
 
 func LoginPage(writer http.ResponseWriter, _ *http.Request) {
-	templ, err := template.ParseFiles("templates/default/auth/login.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+	templ := core.GetView("auth/login")
 
 	data := struct{ Result string }{Result: ""}
 	templ.Execute(writer, data)
@@ -21,10 +17,7 @@ func LoginPage(writer http.ResponseWriter, _ *http.Request) {
 
 func Login(writer http.ResponseWriter, request *http.Request) {
 	// TODO: log all errors
-	templ, err := template.ParseFiles("templates/default/auth/login.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+	templ := core.GetView("auth/login")
 
 	request.ParseForm()
 

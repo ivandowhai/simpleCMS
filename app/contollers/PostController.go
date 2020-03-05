@@ -1,21 +1,17 @@
 package contollers
 
 import (
+	"../core"
 	"../models"
 	"../repositories/post"
 	"fmt"
 	"github.com/gorilla/mux"
-	"html/template"
 	"net/http"
 	"strconv"
 )
 
 func PostsList(writer http.ResponseWriter, request *http.Request) {
-	// TODO: move path to config
-	templ, err := template.ParseFiles("templates/default/post/index.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+	templ := core.GetView("post/index")
 
 	data := struct {
 		Posts []*models.Post
@@ -29,10 +25,8 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	templ, err := template.ParseFiles("templates/default/post/view.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+
+	templ := core.GetView("post/view")
 
 	post, err := post.GetOne(ID)
 	// TODO: handle not found

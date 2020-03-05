@@ -14,6 +14,7 @@ type Settings struct {
 	DBPassword string `json:"db_password"`
 	DBHost     string `json:"db_host"`
 	DBName     string `json:"db_name"`
+	Template   string `json:"template"`
 }
 
 func GetSettings() *Settings {
