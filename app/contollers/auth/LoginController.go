@@ -55,12 +55,14 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	session.Values["userID"] = user.ID
+
 	err = session.Save(request, writer)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// TODO: make redirect
 	data.Result = "OK"
 	templ.Execute(writer, data)
 }

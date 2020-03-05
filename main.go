@@ -6,6 +6,7 @@ import (
 )
 import "./app/contollers"
 import "./app/contollers/auth"
+import "./app/contollers/profile"
 
 func main() {
 	// TODO: use gorilla mux, move routing to separate module
@@ -17,6 +18,7 @@ func main() {
 	r.HandleFunc("/register-submit", auth.Register)
 	r.HandleFunc("/login", auth.LoginPage)
 	r.HandleFunc("/login-submit", auth.Login)
+	r.HandleFunc("/profile", profile.ProfilePage)
 	http.Handle("/", r)
 	http.ListenAndServe(":8080", nil)
 }
