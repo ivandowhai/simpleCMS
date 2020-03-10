@@ -48,6 +48,7 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	session.Values["userID"] = user.ID
+	session.Values["userRole"] = user.Role
 
 	err = session.Save(request, writer)
 	if err != nil {
