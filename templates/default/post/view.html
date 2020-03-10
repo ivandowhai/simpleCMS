@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ .Post.Title }}</title>
-</head>
-<body>
+{{define "content"}}
     <div>
         <h1>{{ .Post.Title }}</h1>
         <p>{{ .Post.Content }}</p>
     </div>
-</body>
-</html>
+{{end}}

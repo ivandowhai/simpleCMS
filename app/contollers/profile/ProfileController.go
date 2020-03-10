@@ -35,5 +35,5 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 		data.Posts = post.GetByUser(userID)
 	}
 
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }

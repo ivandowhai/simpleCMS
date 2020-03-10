@@ -1,35 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
-<body>
+{{define "content"}}
     Hello, {{ .User.Name }}!
 
     <a href="/posts/create">Create post</a>
 
     <table>
         <thead>
-            <tr>
-                <td>Title</td>
-                <td>Actions</td>
-            </tr>
+        <tr>
+            <td>Title</td>
+            <td>Actions</td>
+        </tr>
         </thead>
 
         <tbody>
         {{ range $post := .Posts }}
-           <tr>
-               <td> {{ $post.Title }}</td>
-               <td>
-                   <a href="/posts/view/{{ $post.ID }}">View</a>
-                   <a href="/posts/edit/{{ $post.ID }}">Edit</a>
-                   <a href="/posts/delete/{{ $post.ID }}">Delete</a>
-               </td>
-           </tr>
+            <tr>
+                <td> {{ $post.Title }}</td>
+                <td>
+                    <a href="/posts/view/{{ $post.ID }}">View</a>
+                    <a href="/posts/edit/{{ $post.ID }}">Edit</a>
+                    <a href="/posts/delete/{{ $post.ID }}">Delete</a>
+                </td>
+            </tr>
         {{ end }}
         </tbody>
     </table>
 
-</body>
-</html>
+{{end}}

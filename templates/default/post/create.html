@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create post</title>
-</head>
-<body>
-
+{{define "content"}}
     <form action="/posts/store" method="post">
-        <input type="text" name="title" />
+        <input type="text" name="title"/>
         <textarea name="content"></textarea>
-        <input type="submit" value="Save" />
+        <input type="submit" value="Save"/>
     </form>
-
-</body>
-</html>
+{{end}}

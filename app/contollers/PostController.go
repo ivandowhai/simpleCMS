@@ -17,7 +17,7 @@ func PostsList(writer http.ResponseWriter, request *http.Request) {
 		Posts []*models.Post
 	}{Posts: post.GetAll()}
 
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
@@ -38,7 +38,7 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 		Post *models.Post
 	}{post}
 
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func CreatePost(writer http.ResponseWriter, request *http.Request) {
@@ -59,7 +59,7 @@ func CreatePost(writer http.ResponseWriter, request *http.Request) {
 		UserID uint64
 	}{session.Values["userID"].(uint64)}
 
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func StorePost(writer http.ResponseWriter, request *http.Request) {
@@ -99,7 +99,7 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 		Post *models.Post
 	}{post}
 
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func UpdatePost(writer http.ResponseWriter, request *http.Request) {
