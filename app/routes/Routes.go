@@ -1,4 +1,4 @@
-package core
+package routes
 
 import (
 	"../contollers"
@@ -11,7 +11,9 @@ func GetRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", contollers.PostsList)
 	r.HandleFunc("/posts", contollers.PostsList)
-	r.HandleFunc("/posts/{postId}", contollers.ViewPost)
+	r.HandleFunc("/posts/view/{postId}", contollers.ViewPost)
+	r.HandleFunc("/posts/create", contollers.CreatePostPage)
+	r.HandleFunc("/posts/create-submit", contollers.CreatePost)
 	r.HandleFunc("/register", auth.RegisterPage)
 	r.HandleFunc("/register-submit", auth.Register)
 	r.HandleFunc("/login", auth.LoginPage)

@@ -3,6 +3,7 @@ package profile
 import (
 	"../../core"
 	"../../models"
+	"../../repositories/post"
 	"../../repositories/user"
 	"fmt"
 	"net/http"
@@ -18,17 +19,20 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	data := struct {
-		User *models.User
-	}{User: nil}
+		User  *models.User
+		Posts []*models.Post
+	}{User: nil, Posts: []*models.Post{}}
 
 	if session.Values["userID"] != nil {
-		user, err := user.GetById(session.Values["userID"].(uint64))
+		userID := session.Values["userID"].(uint64)
+		user, err := user.GetById(userID)
 
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		data.User = user
+		data.Posts = post.GetByUser(userID)
 	}
 
 	templ.Execute(writer, data)

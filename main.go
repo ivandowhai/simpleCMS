@@ -1,11 +1,11 @@
 package main
 
 import (
-	"./app/core"
+	"./app/routes"
 	"net/http"
 )
 
 func main() {
-	http.Handle("/", core.GetRouter())
+	http.Handle("/", routes.GetRouter())
 	http.ListenAndServe(":8080", nil)
 }

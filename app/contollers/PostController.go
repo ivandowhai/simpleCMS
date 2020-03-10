@@ -49,7 +49,7 @@ func CreatePostPage(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if session.Values["userID"] == nil || session.Values["userRole"] != 3 {
+	if session.Values["userID"] == nil || session.Values["userRole"].(uint8) != 3 {
 		http.Redirect(writer, request, "/profile", http.StatusSeeOther)
 	}
 
