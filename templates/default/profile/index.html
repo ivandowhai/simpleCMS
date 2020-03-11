@@ -1,9 +1,10 @@
 {{define "content"}}
-    Hello, {{ .User.Name }}!
+    <div class="jumbotron">
+        <h1>Hello, {{ .User.Name }}!</h1>
+        <a href="/posts/create" class="btn btn-primary">Create post</a>
+    </div>
 
-    <a href="/posts/create">Create post</a>
-
-    <table>
+    <table class="table table-striped">
         <thead>
         <tr>
             <td>Title</td>
@@ -16,9 +17,9 @@
             <tr>
                 <td> {{ $post.Title }}</td>
                 <td>
-                    <a href="/posts/view/{{ $post.ID }}">View</a>
-                    <a href="/posts/edit/{{ $post.ID }}">Edit</a>
-                    <a href="/posts/delete/{{ $post.ID }}">Delete</a>
+                    <a href="/posts/view/{{ $post.ID }}" class="btn btn-sm btn-success">View</a>
+                    <a href="/posts/edit/{{ $post.ID }}" class="btn btn-sm btn-info">Edit</a>
+                    <a href="/posts/delete/{{ $post.ID }}" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         {{ end }}

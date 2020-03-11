@@ -1,7 +1,23 @@
 {{define "content"}}
-<form action="/posts/update/{{ .Post.ID }}" method="post">
-    <input type="text" name="title" value="{{ .Post.Title }}" />
-    <textarea name="content">{{ .Post.Content }}</textarea>
-    <input type="submit" value="Update" />
-</form>
+    <div class="container">
+        <h1>Edit post</h1>
+        <form action="/posts/update/{{ .Post.ID }}" method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="title">Title</label>
+                    <input class="form-control" type="text" name="title" value="{{ .Post.Title }}"/>
+                </div>
+                <div class="col-md-12">
+                    <label for="content">Content</label>
+                    <textarea class="form-control" name="content">{{ .Post.Content }}</textarea>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <label></label>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Update"/>
+                </div>
+            </div>
+        </form>
+    </div>
 {{end}}
