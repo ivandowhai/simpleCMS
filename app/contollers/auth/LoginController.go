@@ -41,11 +41,7 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	session, err := core.Store.Get(request, "user")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	session := core.SessionGet(request, "user")
 
 	session.Values["userID"] = user.ID
 	session.Values["userRole"] = user.Role

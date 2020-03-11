@@ -42,16 +42,7 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func CreatePost(writer http.ResponseWriter, request *http.Request) {
-	// TODO: to middleware
-	session, err := core.Store.Get(request, "user")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if session.Values["userID"] == nil || session.Values["userRole"].(uint8) != 3 {
-		http.Redirect(writer, request, "/profile", http.StatusSeeOther)
-	}
+	session := core.SessionGet(request, "user")
 
 	templ := core.GetView("post/create")
 
@@ -63,15 +54,7 @@ func CreatePost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func StorePost(writer http.ResponseWriter, request *http.Request) {
-	session, err := core.Store.Get(request, "user")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if session.Values["userID"] == nil || !core.CanUserPost(session.Values["userRole"].(uint8)) {
-		http.Redirect(writer, request, "/profile", http.StatusSeeOther)
-	}
+	session := core.SessionGet(request, "user")
 
 	request.ParseForm()
 	newPost := models.Post{Title: request.Form.Get("title"), Content: request.Form.Get("content"), AuthorID: session.Values["userID"].(uint64)}
@@ -90,7 +73,7 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("post/edit")
 
 	post, err := post.GetOne(ID)
-	// TODO: handle not found
+	// TODO: handle not found, 404 page, check user is author
 	if err != nil {
 		fmt.Println(err)
 	}

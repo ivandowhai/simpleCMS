@@ -12,11 +12,7 @@ import (
 func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("profile/index")
 
-	session, err := core.Store.Get(request, "user")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	session := core.SessionGet(request, "user")
 
 	data := struct {
 		User  *models.User
