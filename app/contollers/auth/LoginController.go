@@ -3,45 +3,40 @@ package auth
 import (
 	"../../core"
 	"../../repositories/user"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
-func LoginPage(writer http.ResponseWriter, _ *http.Request) {
+func LoginPage(writer http.ResponseWriter, request *http.Request) {
+	session := core.SessionGet(request, "user")
 	templ := core.GetView("auth/login", "auth")
 
-	data := struct{ Result string }{Result: ""}
+	data := struct{ Result string }{""}
+	if len(session.Flashes()) > 0 {
+		data.Result = session.Flashes()[0].(string)
+	}
+
 	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func Login(writer http.ResponseWriter, request *http.Request) {
+	session := core.SessionGet(request, "user")
 	// TODO: log all errors
-	templ := core.GetView("auth/login", "auth")
 
 	request.ParseForm()
 
-	data := struct {
-		Result string
-		UserID uint64
-	}{Result: "", UserID: 0}
-
 	user, err := user.GetByEmail(request.Form.Get("email"))
 	if err != nil {
-		fmt.Println(err.Error())
-		data.Result = err.Error()
-		templ.Execute(writer, data)
+		session.AddFlash(err.Error())
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Form.Get("password"))); err != nil {
-		fmt.Println(err.Error())
-		data.Result = "password is wrong"
-		templ.Execute(writer, data)
+		session.AddFlash("password is wrong")
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 		return
 	}
-
-	session := core.SessionGet(request, "user")
 
 	session.Values["userID"] = user.ID
 	session.Values["userRole"] = user.Role
