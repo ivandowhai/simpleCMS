@@ -120,4 +120,10 @@ var routes = Routes{
 		Pattern: "/login-submit",
 		Handler: auth.Login,
 	},
+	Route{
+		Name:    "Logout",
+		Method:  "GET",
+		Pattern: "/logout",
+		Handler: auth.Logout,
+	},
 }

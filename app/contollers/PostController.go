@@ -11,22 +11,25 @@ import (
 )
 
 func PostsList(writer http.ResponseWriter, request *http.Request) {
-	templ := core.GetView("post/index")
+	session := core.SessionGet(request, "user")
+	templ := core.GetView("post/index", "main")
 
 	data := struct {
-		Posts []*models.Post
-	}{Posts: post.GetAll()}
+		Posts    []*models.Post
+		IsLogged bool
+	}{Posts: post.GetAll(), IsLogged: session.Values["userID"] != nil}
 
 	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
+	session := core.SessionGet(request, "user")
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	templ := core.GetView("post/view")
+	templ := core.GetView("post/view", "main")
 
 	post, err := post.GetOne(ID)
 	// TODO: handle not found
@@ -35,8 +38,9 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	data := struct {
-		Post *models.Post
-	}{post}
+		Post     *models.Post
+		IsLogged bool
+	}{Post: post, IsLogged: session.Values["userID"] != nil}
 
 	templ.ExecuteTemplate(writer, "base", data)
 }
@@ -44,11 +48,11 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 func CreatePost(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
 
-	templ := core.GetView("post/create")
+	templ := core.GetView("post/create", "main")
 
 	data := struct {
-		UserID uint64
-	}{session.Values["userID"].(uint64)}
+		IsLogged bool
+	}{session.Values["userID"] != nil}
 
 	templ.ExecuteTemplate(writer, "base", data)
 }
@@ -65,12 +69,13 @@ func StorePost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func EditPost(writer http.ResponseWriter, request *http.Request) {
+	session := core.SessionGet(request, "user")
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	templ := core.GetView("post/edit")
+	templ := core.GetView("post/edit", "main")
 
 	post, err := post.GetOne(ID)
 	// TODO: handle not found, 404 page, check user is author
@@ -79,8 +84,9 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	data := struct {
-		Post *models.Post
-	}{post}
+		Post     *models.Post
+		IsLogged bool
+	}{Post: post, IsLogged: session.Values["userID"] != nil}
 
 	templ.ExecuteTemplate(writer, "base", data)
 }

@@ -9,15 +9,15 @@ import (
 )
 
 func LoginPage(writer http.ResponseWriter, _ *http.Request) {
-	templ := core.GetView("auth/login")
+	templ := core.GetView("auth/login", "auth")
 
 	data := struct{ Result string }{Result: ""}
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func Login(writer http.ResponseWriter, request *http.Request) {
 	// TODO: log all errors
-	templ := core.GetView("auth/login")
+	templ := core.GetView("auth/login", "auth")
 
 	request.ParseForm()
 
@@ -52,7 +52,14 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	// TODO: make redirect
-	data.Result = "OK"
-	templ.Execute(writer, data)
+	http.Redirect(writer, request, "/", http.StatusSeeOther)
+}
+
+func Logout(writer http.ResponseWriter, request *http.Request) {
+	session := core.SessionGet(request, "user")
+	session.Values["userID"] = nil
+	session.Values["userRole"] = nil
+	session.Save(request, writer)
+
+	http.Redirect(writer, request, "/", http.StatusFound)
 }

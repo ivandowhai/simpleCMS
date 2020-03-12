@@ -10,10 +10,10 @@ import (
 )
 
 func RegisterPage(writer http.ResponseWriter, _ *http.Request) {
-	templ := core.GetView("auth/register")
+	templ := core.GetView("auth/register", "auth")
 
 	data := struct{ Result string }{Result: ""}
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func Register(writer http.ResponseWriter, request *http.Request) {
@@ -26,8 +26,8 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 	newUser := models.User{Email: request.Form.Get("email"), Name: request.Form.Get("name"), Password: string(password), Role: 2}
 	user.CreateUser(newUser)
 
-	templ := core.GetView("auth/register")
+	templ := core.GetView("auth/register", "auth")
 
 	data := struct{ Result string }{Result: "OK"}
-	templ.Execute(writer, data)
+	templ.ExecuteTemplate(writer, "base", data)
 }

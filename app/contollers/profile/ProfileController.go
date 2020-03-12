@@ -10,14 +10,15 @@ import (
 )
 
 func ProfilePage(writer http.ResponseWriter, request *http.Request) {
-	templ := core.GetView("profile/index")
+	templ := core.GetView("profile/index", "main")
 
 	session := core.SessionGet(request, "user")
 
 	data := struct {
-		User  *models.User
-		Posts []*models.Post
-	}{User: nil, Posts: []*models.Post{}}
+		User     *models.User
+		Posts    []*models.Post
+		IsLogged bool
+	}{User: nil, Posts: []*models.Post{}, IsLogged: session.Values["userID"] != nil}
 
 	if session.Values["userID"] != nil {
 		userID := session.Values["userID"].(uint64)
