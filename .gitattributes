@@ -1,3 +1,1 @@
-templates/default/assets/ linguist-vendored
-templates/default/assets/*.js linguist-vendored=false
-templates/default/assets/*.css linguist-vendored=false
+templates/default/assets/* linguist-vendored
