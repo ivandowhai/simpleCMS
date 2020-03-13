@@ -4,8 +4,10 @@ import (
 	"../../core"
 	"../../models"
 	"../../repositories/user"
+	"../../services"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"math/rand"
 	"net/http"
 )
 
@@ -23,11 +25,26 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	newUser := models.User{Email: request.Form.Get("email"), Name: request.Form.Get("name"), Password: string(password), Role: 2}
+
+	confirmationCode := RandStringBytes(30)
+
+	newUser := models.User{Email: request.Form.Get("email"), Name: request.Form.Get("name"), Password: string(password), Role: 2, ConfirmationCode: confirmationCode}
 	user.CreateUser(newUser)
 
 	templ := core.GetView("auth/register", "auth")
 
+	services.SendConfirmationEmail(request.Form.Get("email"), confirmationCode)
+
 	data := struct{ Result string }{Result: "OK"}
 	templ.ExecuteTemplate(writer, "base", data)
+}
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func RandStringBytes(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }

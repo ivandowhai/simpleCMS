@@ -3,6 +3,7 @@ create table users (
     name varchar(256) not null,
     email varchar(256) not null,
     password varchar(255) not null,
+    confirmation_code varchar(255) null
     role tinyint(1) default 1 not null
 );
 
