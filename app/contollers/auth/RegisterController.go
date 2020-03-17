@@ -33,7 +33,7 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 
 	templ := core.GetView("auth/register", "auth")
 
-	services.SendConfirmationEmail(request.Form.Get("email"), confirmationCode)
+	go services.SendConfirmationEmail(request.Form.Get("email"), confirmationCode)
 
 	data := struct{ Result string }{Result: "OK"}
 	templ.ExecuteTemplate(writer, "base", data)
