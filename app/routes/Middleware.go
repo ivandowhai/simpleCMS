@@ -24,3 +24,13 @@ func hasAuthorRole(handler http.Handler) http.Handler {
 		handler.ServeHTTP(writer, request)
 	})
 }
+
+func isUserConfirmed(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		session := core.SessionGet(request, "user")
+		if session.Values["isUserConfirmed"] != "1" {
+			http.Redirect(writer, request, "/profile", http.StatusSeeOther)
+		}
+		handler.ServeHTTP(writer, request)
+	})
+}
