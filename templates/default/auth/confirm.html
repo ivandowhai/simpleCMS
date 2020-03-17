@@ -1,7 +1,17 @@
 {{define "content"}}
-    {{if .Error}}
-        {{.Error}}
-    {{else}}
-        Your account is confirmed
-    {{end}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {{if .Error}}
+                    <div class="alert alert-danger">
+                        {{.Error}}
+                    </div>
+                {{else}}
+                    <div class="alert alert-success">
+                        Your account is confirmed
+                    </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
 {{end}}

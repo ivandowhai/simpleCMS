@@ -6,7 +6,6 @@ import (
 	"../../repositories/user"
 	"../../services"
 	"fmt"
-	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"net/http"
@@ -42,16 +41,16 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 
 func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("auth/confirm", "auth")
-	params := mux.Vars(request)
 
-	userModel, err := user.GetByEmail(params["email"])
+	userModel, err := user.GetByEmail(request.URL.Query().Get("email"))
+	fmt.Println(userModel)
 	if err != nil {
 		data := struct{ Error string }{Error: err.Error()}
 		templ.ExecuteTemplate(writer, "base", data)
 		return
 	}
 
-	if userModel.ConfirmationCode != params["confirmationCode"] {
+	if userModel.ConfirmationCode != request.URL.Query().Get("code") {
 		data := struct{ Error string }{Error: "Wrong code."}
 		templ.ExecuteTemplate(writer, "base", data)
 		return
@@ -59,11 +58,11 @@ func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {
 
 	user.Confirm(userModel)
 
-	data := struct{ Error string }{Error: nil}
+	data := struct{ Error string }{Error: ""}
 	templ.ExecuteTemplate(writer, "base", data)
 }
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func randStringBytes(n int) string {
 	b := make([]byte, n)

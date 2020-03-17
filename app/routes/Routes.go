@@ -126,4 +126,10 @@ var routes = Routes{
 		Pattern: "/logout",
 		Handler: auth.Logout,
 	},
+	Route{
+		Name:    "ConfirmAccount",
+		Method:  "GET",
+		Pattern: "/confirm",
+		Handler: auth.ConfirmAccount,
+	},
 }

@@ -8,7 +8,7 @@ import (
 
 func SendConfirmationEmail(to string, code string) {
 	config := core.GetSettings()
-	body := "Your confirmation link " + config.SiteDomain + "/confirm-email/" + to + "/" + code
+	body := "Your confirmation link " + config.SiteDomain + "/confirm/" + to + "/" + code
 	sendEmail(to, body)
 }
 
