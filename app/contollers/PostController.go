@@ -4,7 +4,6 @@ import (
 	"../core"
 	"../models"
 	"../repositories"
-	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -24,19 +23,20 @@ func PostsList(writer http.ResponseWriter, request *http.Request) {
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
+	logger := core.Logger{}
+	logger.Init()
 	session := core.SessionGet(request, "user")
 	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	templ := core.GetView("post/view", "main")
 
 	post, err := postRepository.GetOne(ID)
-	// TODO: handle not found
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	data := struct {
@@ -72,11 +72,13 @@ func StorePost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func EditPost(writer http.ResponseWriter, request *http.Request) {
+	logger := core.Logger{}
+	logger.Init()
 	session := core.SessionGet(request, "user")
 	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	templ := core.GetView("post/edit", "main")
@@ -84,7 +86,7 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 	post, err := postRepository.GetOne(ID)
 	// TODO: handle not found, 404 page, check user is author
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	data := struct {
@@ -96,10 +98,12 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func UpdatePost(writer http.ResponseWriter, request *http.Request) {
+	logger := core.Logger{}
+	logger.Init()
 	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	request.ParseForm()
@@ -109,10 +113,12 @@ func UpdatePost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func DeletePost(writer http.ResponseWriter, request *http.Request) {
+	logger := core.Logger{}
+	logger.Init()
 	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	postRepository.Delete(ID)

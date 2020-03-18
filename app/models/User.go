@@ -1,6 +1,9 @@
 package models
 
-import _ "github.com/go-sql-driver/mysql"
+import (
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+)
 
 type User struct {
 	ID               uint64
@@ -8,5 +11,5 @@ type User struct {
 	Email            string
 	Password         string
 	Role             uint8
-	ConfirmationCode string
+	ConfirmationCode sql.NullString
 }

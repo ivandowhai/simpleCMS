@@ -21,9 +21,13 @@ func LoginPage(writer http.ResponseWriter, request *http.Request) {
 
 func Login(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
-	// TODO: log all errors
+	logger := core.Logger{}
+	logger.Init()
 
-	request.ParseForm()
+	err := request.ParseForm()
+	if err != nil {
+		logger.WriteLog(err.Error(), "error")
+	}
 
 	userRepository := repositories.UserRepository{}
 
@@ -42,11 +46,11 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 
 	session.Values["userID"] = user.ID
 	session.Values["userRole"] = user.Role
-	session.Values["isUserConfirmed"] = user.ConfirmationCode == ""
+	session.Values["isUserConfirmed"] = user.ConfirmationCode.Valid
 
 	err = session.Save(request, writer)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		logger.WriteLog(err.Error(), "error")
 		return
 	}
 
@@ -54,10 +58,16 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 }
 
 func Logout(writer http.ResponseWriter, request *http.Request) {
+	logger := core.Logger{}
+	logger.Init()
+
 	session := core.SessionGet(request, "user")
 	session.Values["userID"] = nil
 	session.Values["userRole"] = nil
-	session.Save(request, writer)
+	err := session.Save(request, writer)
+	if err != nil {
+		logger.WriteLog(err.Error(), "error")
+	}
 
 	http.Redirect(writer, request, "/", http.StatusFound)
 }

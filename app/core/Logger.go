@@ -1,6 +1,9 @@
 package core
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+	"time"
+)
 
 type Logger struct {
 	settings *Settings
@@ -11,7 +14,11 @@ func (l *Logger) Init() *Logger {
 	return l
 }
 
-func (l *Logger) WriteLog(error string) {
+func (l *Logger) WriteLog(message string, messageType string) {
 	dir := l.settings.LogsDirectory
-	ioutil.WriteFile(dir+"/error.log", []byte(error+"\n"), 0644)
+	date := time.Now()
+	err := ioutil.WriteFile(dir+"/"+messageType+""+date.String()+".log", []byte(message+"\n"), 0644)
+	if err != nil {
+		panic(err)
+	}
 }

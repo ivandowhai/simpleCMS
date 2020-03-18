@@ -4,7 +4,6 @@ import (
 	"../../core"
 	"../../models"
 	"../../repositories"
-	"fmt"
 	"net/http"
 )
 
@@ -12,6 +11,8 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("profile/index", "main")
 	userRepository := repositories.UserRepository{}
 	postRepository := repositories.PostRepository{}
+	logger := core.Logger{}
+	logger.Init()
 
 	session := core.SessionGet(request, "user")
 
@@ -26,7 +27,7 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 		user, err := userRepository.GetById(userID)
 
 		if err != nil {
-			fmt.Println(err)
+			logger.WriteLog(err.Error(), "error")
 		}
 
 		data.User = user
