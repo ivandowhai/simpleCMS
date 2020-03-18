@@ -2,7 +2,7 @@ package auth
 
 import (
 	"../../core"
-	"../../repositories/user"
+	"../../repositories"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -25,7 +25,9 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 
 	request.ParseForm()
 
-	user, err := user.GetByEmail(request.Form.Get("email"))
+	userRepository := repositories.UserRepository{}
+
+	user, err := userRepository.GetByEmail(request.Form.Get("email"))
 	if err != nil {
 		session.AddFlash(err.Error())
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)

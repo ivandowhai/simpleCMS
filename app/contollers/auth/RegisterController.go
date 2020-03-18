@@ -3,7 +3,7 @@ package auth
 import (
 	"../../core"
 	"../../models"
-	"../../repositories/user"
+	"../../repositories"
 	"../../services"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
@@ -27,9 +27,10 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	confirmationCode := randStringBytes(30)
+	userRepository := repositories.UserRepository{}
 
 	newUser := models.User{Email: request.Form.Get("email"), Name: request.Form.Get("name"), Password: string(password), Role: 2, ConfirmationCode: confirmationCode}
-	user.CreateUser(newUser)
+	userRepository.CreateUser(newUser)
 
 	templ := core.GetView("auth/register", "auth")
 
@@ -42,7 +43,8 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("auth/confirm", "auth")
 
-	userModel, err := user.GetByEmail(request.URL.Query().Get("email"))
+	userRepository := repositories.UserRepository{}
+	userModel, err := userRepository.GetByEmail(request.URL.Query().Get("email"))
 	fmt.Println(userModel)
 	if err != nil {
 		data := struct{ Error string }{Error: err.Error()}
@@ -56,7 +58,7 @@ func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	user.Confirm(userModel)
+	userRepository.Confirm(userModel)
 
 	data := struct{ Error string }{Error: ""}
 	templ.ExecuteTemplate(writer, "base", data)

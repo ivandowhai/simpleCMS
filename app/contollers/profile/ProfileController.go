@@ -3,14 +3,15 @@ package profile
 import (
 	"../../core"
 	"../../models"
+	"../../repositories"
 	"../../repositories/post"
-	"../../repositories/user"
 	"fmt"
 	"net/http"
 )
 
 func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("profile/index", "main")
+	userRepository := repositories.UserRepository{}
 
 	session := core.SessionGet(request, "user")
 
@@ -22,7 +23,7 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 
 	if session.Values["userID"] != nil {
 		userID := session.Values["userID"].(uint64)
-		user, err := user.GetById(userID)
+		user, err := userRepository.GetById(userID)
 
 		if err != nil {
 			fmt.Println(err)
