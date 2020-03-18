@@ -2,16 +2,17 @@ package core
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 func GetDB() *sql.DB {
+	logger := Logger{}
+	logger.Init()
 	var settings = GetSettings()
 	var dataSourceName = settings.DBUser + ":" + settings.DBPassword + "@" + settings.DBHost + "/" + settings.DBName
 
 	db, err := sql.Open(settings.DBDriver, dataSourceName)
 	if err != nil {
-		fmt.Println(err)
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	return db

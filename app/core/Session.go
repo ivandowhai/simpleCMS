@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/gorilla/sessions"
 	"net/http"
 )
@@ -10,9 +9,11 @@ import (
 var store = sessions.NewCookieStore([]byte("key"))
 
 func SessionGet(request *http.Request, name string) *sessions.Session {
+	logger := Logger{}
+	logger.Init()
 	session, err := store.Get(request, name)
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.WriteLog(err.Error(), "error")
 	}
 
 	return session
