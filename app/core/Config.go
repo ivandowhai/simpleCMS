@@ -9,19 +9,20 @@ import (
 )
 
 type Settings struct {
-	SiteDomain   string `json:"site_domain"`
-	DBDriver     string `json:"db_driver"`
-	DBUser       string `json:"db_user"`
-	DBPassword   string `json:"db_password"`
-	DBHost       string `json:"db_host"`
-	DBName       string `json:"db_name"`
-	Template     string `json:"template"`
-	SMTPServer   string `json:"smtp_server"`
-	SMTPSSL      bool   `json:"smtp_ssl"`
-	SMTPTSL      bool   `json:"smtp_tls"`
-	SMTPPort     string `json:"smtp_port"`
-	SMTPPassword string `json:"smtp_password"`
-	SMTPAccount  string `json:"smtp_account"`
+	SiteDomain    string `json:"site_domain"`
+	DBDriver      string `json:"db_driver"`
+	DBUser        string `json:"db_user"`
+	DBPassword    string `json:"db_password"`
+	DBHost        string `json:"db_host"`
+	DBName        string `json:"db_name"`
+	Template      string `json:"template"`
+	SMTPServer    string `json:"smtp_server"`
+	SMTPSSL       bool   `json:"smtp_ssl"`
+	SMTPTSL       bool   `json:"smtp_tls"`
+	SMTPPort      string `json:"smtp_port"`
+	SMTPPassword  string `json:"smtp_password"`
+	SMTPAccount   string `json:"smtp_account"`
+	LogsDirectory string `json:"logs_directory"`
 }
 
 func GetSettings() *Settings {

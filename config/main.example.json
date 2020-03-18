@@ -4,5 +4,12 @@
   "db_password": "gotest",
   "db_host": "tcp(127.0.0.1:3307)",
   "db_name": "cms",
-  "template": "default"
+  "template": "default",
+  "smtp_server": "smtp.gmail.com",
+  "smtp_ssl": true,
+  "smtp_tls": true,
+  "smtp_port": "587",
+  "smtp_password": "",
+  "smtp_account": "",
+  "logs_directory": "storage/logs"
 }

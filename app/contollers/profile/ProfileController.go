@@ -4,7 +4,6 @@ import (
 	"../../core"
 	"../../models"
 	"../../repositories"
-	"../../repositories/post"
 	"fmt"
 	"net/http"
 )
@@ -12,6 +11,7 @@ import (
 func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 	templ := core.GetView("profile/index", "main")
 	userRepository := repositories.UserRepository{}
+	postRepository := repositories.PostRepository{}
 
 	session := core.SessionGet(request, "user")
 
@@ -30,7 +30,7 @@ func ProfilePage(writer http.ResponseWriter, request *http.Request) {
 		}
 
 		data.User = user
-		data.Posts = post.GetByUser(userID)
+		data.Posts = postRepository.GetByUser(userID)
 	}
 
 	templ.ExecuteTemplate(writer, "base", data)
