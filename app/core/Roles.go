@@ -18,3 +18,7 @@ func CanUserPost(role uint8) bool {
 
 	return false
 }
+
+func IsAdmin(role uint8) bool {
+	return role == RoleAdmin
+}

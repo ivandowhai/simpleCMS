@@ -46,7 +46,7 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 
 	session.Values["userID"] = user.ID
 	session.Values["userRole"] = user.Role
-	session.Values["isUserConfirmed"] = user.ConfirmationCode.Valid
+	session.Values["isUserConfirmed"] = !user.ConfirmationCode.Valid
 
 	err = session.Save(request, writer)
 	if err != nil {

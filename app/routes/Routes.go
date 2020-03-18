@@ -2,6 +2,7 @@ package routes
 
 import (
 	"../contollers"
+	"../contollers/admin"
 	"../contollers/auth"
 	"../contollers/profile"
 	"github.com/gorilla/mux"
@@ -131,5 +132,12 @@ var routes = Routes{
 		Method:  "GET",
 		Pattern: "/confirm",
 		Handler: auth.ConfirmAccount,
+	},
+	Route{
+		Name:       "AdminIndex",
+		Method:     "GET",
+		Pattern:    "/admin",
+		Handler:    admin.AdminIndex,
+		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
 }
