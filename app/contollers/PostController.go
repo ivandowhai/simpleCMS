@@ -3,7 +3,7 @@ package contollers
 import (
 	"../core"
 	"../models"
-	"../repositories/post"
+	"../repositories"
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -13,17 +13,19 @@ import (
 func PostsList(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
 	templ := core.GetView("post/index", "main")
+	postRepository := repositories.PostRepository{}
 
 	data := struct {
 		Posts    []*models.Post
 		IsLogged bool
-	}{Posts: post.GetAll(), IsLogged: session.Values["userID"] != nil}
+	}{Posts: postRepository.GetAll(), IsLogged: session.Values["userID"] != nil}
 
 	templ.ExecuteTemplate(writer, "base", data)
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
+	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
@@ -31,7 +33,7 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 
 	templ := core.GetView("post/view", "main")
 
-	post, err := post.GetOne(ID)
+	post, err := postRepository.GetOne(ID)
 	// TODO: handle not found
 	if err != nil {
 		fmt.Println(err)
@@ -59,17 +61,19 @@ func CreatePost(writer http.ResponseWriter, request *http.Request) {
 
 func StorePost(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
+	postRepository := repositories.PostRepository{}
 
 	request.ParseForm()
 	newPost := models.Post{Title: request.Form.Get("title"), Content: request.Form.Get("content"), AuthorID: session.Values["userID"].(uint64)}
 
-	post.Create(newPost)
+	postRepository.Create(newPost)
 
 	http.Redirect(writer, request, "/profile", http.StatusSeeOther)
 }
 
 func EditPost(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
+	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
@@ -77,7 +81,7 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 
 	templ := core.GetView("post/edit", "main")
 
-	post, err := post.GetOne(ID)
+	post, err := postRepository.GetOne(ID)
 	// TODO: handle not found, 404 page, check user is author
 	if err != nil {
 		fmt.Println(err)
@@ -92,24 +96,26 @@ func EditPost(writer http.ResponseWriter, request *http.Request) {
 }
 
 func UpdatePost(writer http.ResponseWriter, request *http.Request) {
+	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	request.ParseForm()
-	post.Update(ID, request.Form.Get("title"), request.Form.Get("content"))
+	postRepository.Update(ID, request.Form.Get("title"), request.Form.Get("content"))
 
 	http.Redirect(writer, request, "/posts/view/"+mux.Vars(request)["postId"], http.StatusSeeOther)
 }
 
 func DeletePost(writer http.ResponseWriter, request *http.Request) {
+	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	post.Delete(ID)
+	postRepository.Delete(ID)
 
 	http.Redirect(writer, request, "/profile", http.StatusSeeOther)
 }
