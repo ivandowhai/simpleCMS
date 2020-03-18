@@ -1,0 +1,36 @@
+{{define "content"}}
+    <div class="jumbotron">
+        <h1>Users</h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Actions</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{ range $user := .Users }}
+            <tr>
+                <td> {{ $user.Name }}</td>
+                <td> {{ $user.Email }}</td>
+                <td>
+                    {{$user.Role}}
+{{/*                    <select class="form-control">*/}}
+{{/*                        {{range $role := .Roles}}*/}}
+{{/*                            <option>*/}}
+{{/*                                {{$role.Title}}*/}}
+{{/*                            </option>*/}}
+{{/*                        {{end}}*/}}
+{{/*                    </select>*/}}
+                    <a href="/posts/delete/{{ $user.ID }}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+
+{{end}}

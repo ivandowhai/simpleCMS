@@ -138,6 +138,13 @@ var routes = Routes{
 		Method:     "GET",
 		Pattern:    "/admin",
 		Handler:    admin.AdminIndex,
+		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminOrModeratorRole},
+	},
+	Route{
+		Name:       "AdminUsers",
+		Method:     "GET",
+		Pattern:    "/admin/users",
+		Handler:    admin.UsersList,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
 }

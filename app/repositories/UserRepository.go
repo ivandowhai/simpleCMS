@@ -46,3 +46,27 @@ func (r *UserRepository) CreateUser(user models.User) {
 		fmt.Println(err)
 	}
 }
+
+func (r *UserRepository) GetAll() []*models.User {
+	rows, err := core.GetDB().Query("select id, name, email, role from users")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rows.Close()
+
+	users := make([]*models.User, 0)
+	for rows.Next() {
+		user := new(models.User)
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Role)
+		if err != nil {
+			panic(err)
+		}
+
+		users = append(users, user)
+	}
+	if err = rows.Err(); err != nil {
+		fmt.Println(err)
+	}
+
+	return users
+}

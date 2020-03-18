@@ -44,3 +44,13 @@ func hasAdminRole(handler http.Handler) http.Handler {
 		handler.ServeHTTP(writer, request)
 	})
 }
+
+func hasAdminOrModeratorRole(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		session := core.SessionGet(request, "user")
+		if !core.IsAdminOrModer(session.Values["userRole"].(uint8)) {
+			http.Redirect(writer, request, "/", http.StatusSeeOther)
+		}
+		handler.ServeHTTP(writer, request)
+	})
+}
