@@ -23,6 +23,7 @@ type Settings struct {
 	SMTPPassword  string `json:"smtp_password"`
 	SMTPAccount   string `json:"smtp_account"`
 	LogsDirectory string `json:"logs_directory"`
+	FrontHost     string `json:"front_host"`
 }
 
 func GetSettings() *Settings {

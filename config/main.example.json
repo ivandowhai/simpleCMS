@@ -11,5 +11,6 @@
   "smtp_port": "587",
   "smtp_password": "",
   "smtp_account": "",
-  "logs_directory": "storage/logs"
+  "logs_directory": "storage/logs",
+  "front_host": "http://127.0.0.1:5000/"
 }

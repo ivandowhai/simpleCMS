@@ -4,22 +4,23 @@ import (
 	"../core"
 	"../models"
 	"../repositories"
+	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
 )
 
-func PostsList(writer http.ResponseWriter, request *http.Request) {
-	session := core.SessionGet(request, "user")
-	templ := core.GetView("post/index", "main")
+func PostsList(writer http.ResponseWriter, _ *http.Request) {
 	postRepository := repositories.PostRepository{}
 
-	data := struct {
-		Posts    []*models.Post
-		IsLogged bool
-	}{Posts: postRepository.GetAll(), IsLogged: session.Values["userID"] != nil}
+	posts := postRepository.GetAll()
 
-	templ.ExecuteTemplate(writer, "base", data)
+	jsonResponse, err := json.Marshal(posts)
+	if err != nil {
+		fmt.Println(err)
+	}
+	core.MakeResponse(writer, jsonResponse)
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
@@ -109,7 +110,7 @@ func UpdatePost(writer http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
 	postRepository.Update(ID, request.Form.Get("title"), request.Form.Get("content"))
 
-	http.Redirect(writer, request, "/posts/view/"+mux.Vars(request)["postId"], http.StatusSeeOther)
+	http.Redirect(writer, request, "/post/view/"+mux.Vars(request)["postId"], http.StatusSeeOther)
 }
 
 func DeletePost(writer http.ResponseWriter, request *http.Request) {
