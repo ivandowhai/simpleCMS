@@ -1,7 +1,8 @@
 package core
 
 import (
-	"io/ioutil"
+	"log"
+	"os"
 	"time"
 )
 
@@ -17,8 +18,17 @@ func (l *Logger) Init() *Logger {
 func (l *Logger) WriteLog(message string, messageType string) {
 	dir := l.settings.LogsDirectory
 	date := time.Now()
-	err := ioutil.WriteFile(dir+"/"+messageType+""+date.String()+".log", []byte(message+"\n"), 0644)
+	filename := dir + "/" + messageType + "" + date.Format("2006-02-01") + ".log"
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
+	}
+
+	if _, err := file.Write([]byte(message + "\n")); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := file.Close(); err != nil {
+		log.Fatal(err)
 	}
 }

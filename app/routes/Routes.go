@@ -147,4 +147,25 @@ var routes = Routes{
 		Handler:    admin.UsersList,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
+	Route{
+		Name:       "AdminUserEdit",
+		Method:     "GET",
+		Pattern:    "/admin/users/edit/{userId}",
+		Handler:    admin.UserEdit,
+		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
+	},
+	Route{
+		Name:       "AdminUserUpdate",
+		Method:     "POST",
+		Pattern:    "/admin/users/update/{userId}",
+		Handler:    admin.UserUpdate,
+		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
+	},
+	Route{
+		Name:       "AdminUserDelete",
+		Method:     "GET",
+		Pattern:    "/admin/users/delete/{userId}",
+		Handler:    admin.UserDelete,
+		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
+	},
 }

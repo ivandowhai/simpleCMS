@@ -1,0 +1,28 @@
+{{define "content"}}
+
+    <form action="/admin/users/update/{{.User.ID}}" method="post">
+        <div class="container">
+            <h1>{{.User.Name}}</h1>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Role</label>
+                    <select name="role" class="form-control">
+                        {{range $role := .Roles}}
+                            <option value="{{$role.ID}}" >
+                                {{$role.Title}}
+                            </option>
+                        {{end}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                  <input type="submit" class="btn btn-success" value="Update" />
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+{{end}}

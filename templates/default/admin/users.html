@@ -18,15 +18,8 @@
                 <td> {{ $user.Name }}</td>
                 <td> {{ $user.Email }}</td>
                 <td>
-                    {{$user.Role}}
-{{/*                    <select class="form-control">*/}}
-{{/*                        {{range $role := .Roles}}*/}}
-{{/*                            <option>*/}}
-{{/*                                {{$role.Title}}*/}}
-{{/*                            </option>*/}}
-{{/*                        {{end}}*/}}
-{{/*                    </select>*/}}
-                    <a href="/posts/delete/{{ $user.ID }}" class="btn btn-sm btn-danger">Delete</a>
+                    <a href="/admin/users/edit/{{ $user.ID }}" class="btn btn-sm btn-info">Edit</a>
+                    <a href="/admin/users/delete/{{ $user.ID }}" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         {{ end }}
