@@ -26,26 +26,22 @@ func PostsList(writer http.ResponseWriter, _ *http.Request) {
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
 	logger := core.Logger{}
 	logger.Init()
-	session := core.SessionGet(request, "user")
 	postRepository := repositories.PostRepository{}
 	ID, err := strconv.ParseUint(mux.Vars(request)["postId"], 10, 16)
 	if err != nil {
 		logger.WriteLog(err.Error(), "error")
 	}
 
-	templ := core.GetView("post/view", "main")
-
 	post, err := postRepository.GetOne(ID)
 	if err != nil {
 		logger.WriteLog(err.Error(), "error")
 	}
 
-	data := struct {
-		Post     *models.Post
-		IsLogged bool
-	}{Post: post, IsLogged: session.Values["userID"] != nil}
-
-	templ.ExecuteTemplate(writer, "base", data)
+	jsonResponse, err := json.Marshal(post)
+	if err != nil {
+		fmt.Println(err)
+	}
+	core.MakeResponse(writer, jsonResponse)
 }
 
 func CreatePost(writer http.ResponseWriter, request *http.Request) {
