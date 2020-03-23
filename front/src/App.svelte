@@ -1,4 +1,6 @@
 <script>
+
+	// TODO: https://linguinecode.com/post/how-to-add-routes-to-svelte-spa-with-routify use instead  'svelte-router-spa'
 	import { Router } from 'svelte-router-spa'
 	import routes from './routes'
 

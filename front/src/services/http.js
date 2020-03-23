@@ -1,8 +1,9 @@
 import axios from 'axios'
+import config from "../../config";
 
 class Http {
     constructor() {
-        this.backendDomain = 'http://127.0.0.1:8080/'
+        this.backendDomain = config.backendDomain
     }
 
     get(url) {
@@ -17,3 +18,5 @@ class Http {
         });
     }
 }
+
+export default Http

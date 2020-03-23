@@ -1,9 +1,14 @@
-import post from './post/index.svelte'
+import postsList from './components/post/index.svelte'
+import postsView from './components/post/view.svelte'
 
 const routes = [
     {
         name: '/',
-        component: post
+        component: postsList
+    },
+    {
+        name: 'post/:id',
+        component: postsView
     }
 ];
 
