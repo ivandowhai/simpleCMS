@@ -5,7 +5,7 @@
     let post = getPost()
 
     async function getPost() {
-        return await new Http().get('post/view/' + currentRoute.namedParams.id);
+        return await new Http().get('/post/view/' + currentRoute.namedParams.id);
     }
 
 </script>

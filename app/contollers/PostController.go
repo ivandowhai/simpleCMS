@@ -4,8 +4,6 @@ import (
 	"../core"
 	"../models"
 	"../repositories"
-	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -16,11 +14,8 @@ func PostsList(writer http.ResponseWriter, _ *http.Request) {
 
 	posts := postRepository.GetAll()
 
-	jsonResponse, err := json.Marshal(posts)
-	if err != nil {
-		fmt.Println(err)
-	}
-	core.MakeResponse(writer, jsonResponse)
+	response := core.SuccessResponse{Data: posts}
+	core.MakeSuccessResponse(writer, &response)
 }
 
 func ViewPost(writer http.ResponseWriter, request *http.Request) {
@@ -37,11 +32,8 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 		logger.WriteLog(err.Error(), "error")
 	}
 
-	jsonResponse, err := json.Marshal(post)
-	if err != nil {
-		fmt.Println(err)
-	}
-	core.MakeResponse(writer, jsonResponse)
+	response := core.SuccessResponse{Data: post}
+	core.MakeSuccessResponse(writer, &response)
 }
 
 func CreatePost(writer http.ResponseWriter, request *http.Request) {

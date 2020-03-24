@@ -3,8 +3,10 @@ package auth
 import (
 	"../../core"
 	"../../repositories"
+	"../../services"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"time"
 )
 
 func LoginPage(writer http.ResponseWriter, request *http.Request) {
@@ -23,6 +25,7 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 	session := core.SessionGet(request, "user")
 	logger := core.Logger{}
 	logger.Init()
+	loginService := services.LoginService{}
 
 	err := request.ParseForm()
 	if err != nil {
@@ -44,17 +47,17 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	session.Values["userID"] = user.ID
-	session.Values["userRole"] = user.Role
-	session.Values["isUserConfirmed"] = !user.ConfirmationCode.Valid
-
-	err = session.Save(request, writer)
+	err = loginService.Login(user)
 	if err != nil {
-		logger.WriteLog(err.Error(), "error")
-		return
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
+	} else {
+		response := core.SuccessResponse{Data: struct {
+			Token          string
+			ExpirationTime time.Time
+		}{loginService.TokenString, loginService.ExpirationTime}}
+		core.MakeSuccessResponse(writer, &response)
 	}
-
-	http.Redirect(writer, request, "/", http.StatusSeeOther)
 }
 
 func Logout(writer http.ResponseWriter, request *http.Request) {

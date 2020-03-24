@@ -5,6 +5,8 @@ import (
 	"../contollers/admin"
 	"../contollers/auth"
 	"../contollers/profile"
+	"../core"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -26,6 +28,14 @@ func GetRouter() *mux.Router {
 		for _, middleware := range route.Middleware {
 			handler = middleware(handler)
 		}
+
+		var settings = core.GetSettings()
+
+		handler = handlers.CORS(
+			handlers.AllowedHeaders([]string{"X-Requested-With", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers"}),
+			handlers.AllowedOrigins([]string{settings.FrontHost}),
+			handlers.AllowedMethods([]string{route.Method, "Options"}),
+		)(handler)
 
 		r.Methods(route.Method).
 			Path(route.Pattern).

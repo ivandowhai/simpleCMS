@@ -5,7 +5,7 @@
     let posts = getPosts()
 
     async function getPosts() {
-        return await new Http().get('post');
+        return await new Http().get('/post');
     }
 
 </script>
