@@ -52,18 +52,3 @@ func Login(writer http.ResponseWriter, request *http.Request) {
 		core.MakeSuccessResponse(writer, &response)
 	}
 }
-
-func Logout(writer http.ResponseWriter, request *http.Request) {
-	logger := core.Logger{}
-	logger.Init()
-
-	session := core.SessionGet(request, "user")
-	session.Values["userID"] = nil
-	session.Values["userRole"] = nil
-	err := session.Save(request, writer)
-	if err != nil {
-		logger.WriteLog(err.Error(), "error")
-	}
-
-	http.Redirect(writer, request, "/", http.StatusFound)
-}

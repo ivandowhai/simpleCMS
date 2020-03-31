@@ -114,12 +114,6 @@ var routes = Routes{
 		Handler: auth.Login,
 	},
 	Route{
-		Name:    "Logout",
-		Method:  http.MethodGet,
-		Pattern: "/logout",
-		Handler: auth.Logout,
-	},
-	Route{
 		Name:    "ConfirmAccount",
 		Method:  http.MethodGet,
 		Pattern: "/confirm",

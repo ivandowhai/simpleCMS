@@ -11,6 +11,7 @@
         await new Http().post('/login', {email: email, password: password})
                 .then(response => {
                     localStorage.setItem('token', response.Token)
+                    location.replace('/')
                 })
                 .catch(error => {
                     console.log(error)
