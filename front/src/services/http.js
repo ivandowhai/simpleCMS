@@ -7,9 +7,6 @@ class Http {
         this.token = localStorage.getItem('token') ? localStorage.getItem('token').toString() : ''
         this.headers = {
             'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": this.backendDomain,
-            "Access-Control-Allow-Headers": "Content-Type, Content-Type,access-control-allow-origin, access-control-allow-headers",
-            'token': this.token
         }
     }
 
@@ -17,21 +14,26 @@ class Http {
         return axios({
             method: 'GET',
             headers: this.headers,
-            url: this.backendDomain + url
+            url: this.backendDomain + url,
+            params: {token: this.token}
         }).then(response => {
-            return response.data
+            return response.data.Data
+        }).catch(error => {
+            console.log(error)
         });
     }
 
     post(url, data) {
-        return axios({
-            method: 'POST',
-            headers: this.headers,
-            url: this.backendDomain + url,
-            data: data,
-        }).then(response => {
-            return response.data
-        });
+        data.token = this.token
+        return axios.post(
+            this.backendDomain + url,
+            data,
+            {headers: this.headers}
+            ).then(response => {
+                return response.data.Data
+            }).catch(error => {
+                console.log(error)
+            });
     }
 }
 

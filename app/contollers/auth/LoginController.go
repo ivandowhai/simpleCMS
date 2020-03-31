@@ -4,46 +4,39 @@ import (
 	"../../core"
 	"../../repositories"
 	"../../services"
+	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
 )
 
-func LoginPage(writer http.ResponseWriter, request *http.Request) {
-	session := core.SessionGet(request, "user")
-	templ := core.GetView("auth/login", "auth")
-
-	data := struct{ Result string }{""}
-	if len(session.Flashes()) > 0 {
-		data.Result = session.Flashes()[0].(string)
-	}
-
-	templ.ExecuteTemplate(writer, "base", data)
+type loginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func Login(writer http.ResponseWriter, request *http.Request) {
-	session := core.SessionGet(request, "user")
-	logger := core.Logger{}
-	logger.Init()
-	loginService := services.LoginService{}
-
-	err := request.ParseForm()
+	var requestBody loginRequest
+	err := json.NewDecoder(request.Body).Decode(&requestBody)
 	if err != nil {
-		logger.WriteLog(err.Error(), "error")
-	}
-
-	userRepository := repositories.UserRepository{}
-
-	user, err := userRepository.GetByEmail(request.Form.Get("email"))
-	if err != nil {
-		session.AddFlash(err.Error())
-		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
 		return
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Form.Get("password"))); err != nil {
-		session.AddFlash("password is wrong")
-		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	loginService := services.LoginService{}
+	userRepository := repositories.UserRepository{}
+
+	user, err := userRepository.GetByEmail(requestBody.Email)
+	if err != nil {
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(requestBody.Password)); err != nil {
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
 		return
 	}
 

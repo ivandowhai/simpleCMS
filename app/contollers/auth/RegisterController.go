@@ -12,13 +12,6 @@ import (
 	"net/http"
 )
 
-func RegisterPage(writer http.ResponseWriter, _ *http.Request) {
-	templ := core.GetView("auth/register", "auth")
-
-	data := struct{ Result string }{Result: ""}
-	templ.ExecuteTemplate(writer, "base", data)
-}
-
 func Register(writer http.ResponseWriter, request *http.Request) {
 	logger := core.Logger{}
 	logger.Init()

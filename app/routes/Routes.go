@@ -32,12 +32,12 @@ func GetRouter() *mux.Router {
 		var settings = core.GetSettings()
 
 		handler = handlers.CORS(
-			handlers.AllowedHeaders([]string{"X-Requested-With", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers"}),
+			handlers.AllowedHeaders([]string{"Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Accept", "Accept-Encoding", "content-type"}),
 			handlers.AllowedOrigins([]string{settings.FrontHost}),
-			handlers.AllowedMethods([]string{route.Method, "Options"}),
+			handlers.AllowedMethods([]string{route.Method, http.MethodOptions}),
 		)(handler)
 
-		r.Methods(route.Method).
+		r.Methods(route.Method, http.MethodOptions).
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)
@@ -48,132 +48,114 @@ func GetRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
-		Name:    "Index",
-		Method:  "GET",
-		Pattern: "/",
-		Handler: contollers.PostsList,
-	},
-	Route{
 		Name:    "PostsList",
-		Method:  "GET",
+		Method:  http.MethodGet,
 		Pattern: "/post",
 		Handler: contollers.PostsList,
 	},
 	Route{
 		Name:    "ViewPost",
-		Method:  "GET",
+		Method:  http.MethodGet,
 		Pattern: "/post/view/{postId}",
 		Handler: contollers.ViewPost,
 	},
 	Route{
 		Name:       "CreatePost",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/post/create",
 		Handler:    contollers.CreatePost,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
 	},
 	Route{
 		Name:       "StorePost",
-		Method:     "POST",
+		Method:     http.MethodPost,
 		Pattern:    "/post/store",
 		Handler:    contollers.StorePost,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
 	},
 	Route{
 		Name:       "EditPost",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/post/edit/{postId}",
 		Handler:    contollers.EditPost,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
 	},
 	Route{
 		Name:       "UpdatePost",
-		Method:     "POST",
+		Method:     http.MethodPost,
 		Pattern:    "/post/update/{postId}",
 		Handler:    contollers.UpdatePost,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
 	},
 	Route{
 		Name:       "DeletePost",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/post/delete/{postId}",
 		Handler:    contollers.DeletePost,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
 	},
 	Route{
 		Name:       "Profile",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/profile",
 		Handler:    profile.ProfilePage,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed},
 	},
 	Route{
-		Name:    "RegisterPage",
-		Method:  "GET",
-		Pattern: "/register",
-		Handler: auth.RegisterPage,
-	},
-	Route{
 		Name:    "Register",
-		Method:  "POST",
-		Pattern: "/register-submit",
+		Method:  http.MethodPost,
+		Pattern: "/register",
 		Handler: auth.Register,
 	},
 	Route{
-		Name:    "LoginPage",
-		Method:  "GET",
-		Pattern: "/login",
-		Handler: auth.LoginPage,
-	},
-	Route{
 		Name:    "Login",
-		Method:  "POST",
-		Pattern: "/login-submit",
+		Method:  http.MethodPost,
+		Pattern: "/login",
 		Handler: auth.Login,
 	},
 	Route{
 		Name:    "Logout",
-		Method:  "GET",
+		Method:  http.MethodGet,
 		Pattern: "/logout",
 		Handler: auth.Logout,
 	},
 	Route{
 		Name:    "ConfirmAccount",
-		Method:  "GET",
+		Method:  http.MethodGet,
 		Pattern: "/confirm",
 		Handler: auth.ConfirmAccount,
 	},
 	Route{
 		Name:       "AdminIndex",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/admin",
 		Handler:    admin.AdminIndex,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminOrModeratorRole},
 	},
 	Route{
 		Name:       "AdminUsers",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/admin/users",
 		Handler:    admin.UsersList,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
 	Route{
 		Name:       "AdminUserEdit",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/admin/users/edit/{userId}",
 		Handler:    admin.UserEdit,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
 	Route{
 		Name:       "AdminUserUpdate",
-		Method:     "POST",
+		Method:     http.MethodPost,
 		Pattern:    "/admin/users/update/{userId}",
 		Handler:    admin.UserUpdate,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},
 	},
 	Route{
 		Name:       "AdminUserDelete",
-		Method:     "GET",
+		Method:     http.MethodGet,
 		Pattern:    "/admin/users/delete/{userId}",
 		Handler:    admin.UserDelete,
 		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, isUserConfirmed, hasAdminRole},

@@ -3,15 +3,30 @@ package routes
 import (
 	"../core"
 	"../services"
+	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
 )
 
+type requestBody struct {
+	Token string `json:"token"`
+}
+
 func isUserLoggedMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		tokenString := request.Header.Get("token")
+		var tokenString string
+		if request.Method == http.MethodGet {
+			tokenString = request.URL.Query()["token"][0]
+		} else {
+			var body requestBody
+			err := json.NewDecoder(request.Body).Decode(&body)
+			if err != nil {
+				http.Error(writer, err.Error(), http.StatusBadRequest)
+				return
+			}
+			tokenString = body.Token
+		}
 		if tokenString == "" {
-			// If the cookie is not set, return an unauthorized status
 			writer.WriteHeader(http.StatusUnauthorized)
 			return
 		}
