@@ -7,21 +7,31 @@ import (
 	"../../repositories"
 	"../../services"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
+type registerRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func Register(writer http.ResponseWriter, request *http.Request) {
 	logger := core.Logger{}
 	logger.Init()
 
-	err := request.ParseForm()
+	var requestBody registerRequest
+	err := json.NewDecoder(request.Body).Decode(&requestBody)
 	if err != nil {
-		logger.WriteLog(err.Error(), "error")
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
+		return
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(request.Form.Get("password")), 10)
+	password, err := bcrypt.GenerateFromPassword([]byte(requestBody.Password), 10)
 	if err != nil {
 		logger.WriteLog(err.Error(), "error")
 	}
@@ -31,19 +41,19 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 
 	// TODO: role from settings
 	newUser := models.User{
-		Email:    request.Form.Get("email"),
-		Name:     request.Form.Get("name"),
+		Email:    requestBody.Email,
+		Name:     requestBody.Name,
 		Password: string(password), Role: 2,
 		ConfirmationCode: sql.NullString{String: helpers.RandStringBytes(30), Valid: true},
 	}
 	userRepository.CreateUser(newUser)
 
-	templ := core.GetView("auth/register", "auth")
-
 	go services.SendConfirmationEmail(request.Form.Get("email"), confirmationCode)
 
-	data := struct{ Result string }{Result: "OK"}
-	templ.ExecuteTemplate(writer, "base", data)
+	response := core.SuccessResponse{Data: struct {
+		Result string
+	}{Result: "Confirmation code was sent to your email"}}
+	core.MakeSuccessResponse(writer, &response)
 }
 
 func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {

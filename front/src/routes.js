@@ -1,6 +1,7 @@
 import postsList from './components/post/index.svelte'
 import postsView from './components/post/view.svelte'
 import login from './components/auth/login.svelte'
+import register from './components/auth/register.svelte'
 import mainLayout from './components/mainLayout.svelte'
 
 const routes = [
@@ -17,6 +18,11 @@ const routes = [
     {
         name: '/login',
         component: login,
+        layout: mainLayout,
+    },
+    {
+        name: '/register',
+        component: register,
         layout: mainLayout,
     }
 ];
