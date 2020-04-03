@@ -48,6 +48,10 @@ func isUserLoggedMiddleware(handler http.Handler) http.Handler {
 			return
 		}
 
+		session := core.SessionGet(request, "user")
+		session.Values["userId"] = claims.Id
+		session.Values["userRole"] = claims.UserRole
+		session.Values["isUserConfirmed"] = claims.IsUserConfirmed
 		handler.ServeHTTP(writer, request)
 	})
 }

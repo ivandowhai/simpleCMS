@@ -8,7 +8,6 @@ import (
 	"../../services"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -17,6 +16,11 @@ type registerRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type confirmRequest struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
 }
 
 func Register(writer http.ResponseWriter, request *http.Request) {
@@ -57,25 +61,32 @@ func Register(writer http.ResponseWriter, request *http.Request) {
 }
 
 func ConfirmAccount(writer http.ResponseWriter, request *http.Request) {
-	templ := core.GetView("auth/confirm", "auth")
-
-	userRepository := repositories.UserRepository{}
-	userModel, err := userRepository.GetByEmail(request.URL.Query().Get("email"))
-	fmt.Println(userModel)
+	var requestBody confirmRequest
+	err := json.NewDecoder(request.Body).Decode(&requestBody)
 	if err != nil {
-		data := struct{ Error string }{Error: err.Error()}
-		templ.ExecuteTemplate(writer, "base", data)
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
 		return
 	}
 
-	if userModel.ConfirmationCode.String != request.URL.Query().Get("code") {
-		data := struct{ Error string }{Error: "Wrong code."}
-		templ.ExecuteTemplate(writer, "base", data)
+	userRepository := repositories.UserRepository{}
+	userModel, err := userRepository.GetByEmail(requestBody.Email)
+	if err != nil {
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
+		return
+	}
+
+	if userModel.ConfirmationCode.String != requestBody.Code {
+		response := core.ErrorResponse{Error: "Wrong code."}
+		core.MakeErrorResponse(writer, &response)
 		return
 	}
 
 	userRepository.Confirm(userModel)
 
-	data := struct{ Error string }{Error: ""}
-	templ.ExecuteTemplate(writer, "base", data)
+	response := core.SuccessResponse{Data: struct {
+		Result string
+	}{Result: "Your account was confirmed"}}
+	core.MakeSuccessResponse(writer, &response)
 }

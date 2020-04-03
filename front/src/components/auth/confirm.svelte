@@ -1,23 +1,21 @@
 <script>
-    import Http from '../../services/http'
     import {navigateTo} from 'svelte-router-spa'
+    import Http from '../../services/http'
 
     let error
+    let code = ''
     let email = ''
-    let password = ''
-    let name = ''
 
-    async function register(e) {
+    async function confirm(e) {
         e.preventDefault()
 
-        await new Http().post('/register', {name: name, email: email, password: password})
+        await new Http().post('/confirm', {code: code, email: email})
                 .then(response => {
                     alert(response.Result)
-                    navigateTo('/confirm')
+                    navigateTo('/')
                 })
                 .catch(e => {error = e})
     }
-
 </script>
 
 <main>
@@ -27,22 +25,17 @@
                 {error}
             </div>
         {/if}
+
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <label for="name">Name</label>
-                    <input class="form-control" type="text" name="name" bind:value="{name}"/>
-                </div>
-
-
-                <div class="col-md-12">
-                    <label for="email">Email</label>
+                    <label for="name">Email</label>
                     <input class="form-control" type="email" name="email" bind:value="{email}"/>
                 </div>
 
                 <div class="col-md-12">
-                    <label for="password">Password</label>
-                    <input class="form-control" type="password" name="password" bind:value="{password}"/>
+                    <label for="name">Code</label>
+                    <input class="form-control" type="text" name="code" bind:value="{code}"/>
                 </div>
 
                 <div class="col-md-12">
@@ -50,7 +43,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    <button class="btn btn-primary" on:click={register}>Register</button>
+                    <button class="btn btn-primary" on:click={confirm}>Confirm</button>
                 </div>
             </div>
         </div>

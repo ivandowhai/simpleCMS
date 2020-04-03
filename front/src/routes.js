@@ -1,7 +1,10 @@
 import postsList from './components/post/index.svelte'
 import postsView from './components/post/view.svelte'
+import postCreate from './components/post/create.svelte'
 import login from './components/auth/login.svelte'
 import register from './components/auth/register.svelte'
+import confirm from './components/auth/confirm.svelte'
+import profile from './components/profile.svelte'
 import mainLayout from './components/mainLayout.svelte'
 
 const routes = [
@@ -11,8 +14,13 @@ const routes = [
         layout: mainLayout,
     },
     {
-        name: '/post/:id',
+        name: '/post/view/:id',
         component: postsView,
+        layout: mainLayout,
+    },
+    {
+        name: '/post/create',
+        component: postCreate,
         layout: mainLayout,
     },
     {
@@ -23,6 +31,16 @@ const routes = [
     {
         name: '/register',
         component: register,
+        layout: mainLayout,
+    },
+    {
+        name: '/confirm',
+        component: confirm,
+        layout: mainLayout,
+    },
+    {
+        name: '/profile',
+        component: profile,
         layout: mainLayout,
     }
 ];

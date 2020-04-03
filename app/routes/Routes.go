@@ -60,13 +60,6 @@ var routes = Routes{
 		Handler: contollers.ViewPost,
 	},
 	Route{
-		Name:       "CreatePost",
-		Method:     http.MethodGet,
-		Pattern:    "/post/create",
-		Handler:    contollers.CreatePost,
-		Middleware: []mux.MiddlewareFunc{isUserLoggedMiddleware, hasAuthorRole, isUserConfirmed},
-	},
-	Route{
 		Name:       "StorePost",
 		Method:     http.MethodPost,
 		Pattern:    "/post/store",
@@ -115,7 +108,7 @@ var routes = Routes{
 	},
 	Route{
 		Name:    "ConfirmAccount",
-		Method:  http.MethodGet,
+		Method:  http.MethodPost,
 		Pattern: "/confirm",
 		Handler: auth.ConfirmAccount,
 	},

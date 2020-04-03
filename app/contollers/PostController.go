@@ -4,6 +4,7 @@ import (
 	"../core"
 	"../models"
 	"../repositories"
+	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
@@ -36,24 +37,20 @@ func ViewPost(writer http.ResponseWriter, request *http.Request) {
 	core.MakeSuccessResponse(writer, &response)
 }
 
-func CreatePost(writer http.ResponseWriter, request *http.Request) {
-	session := core.SessionGet(request, "user")
-
-	templ := core.GetView("post/create", "main")
-
-	data := struct {
-		IsLogged bool
-	}{session.Values["userID"] != nil}
-
-	templ.ExecuteTemplate(writer, "base", data)
-}
-
 func StorePost(writer http.ResponseWriter, request *http.Request) {
-	session := core.SessionGet(request, "user")
 	postRepository := repositories.PostRepository{}
 
+	newPost := models.Post{}
+	err := json.NewDecoder(request.Body).Decode(&newPost)
+	if err != nil {
+		response := core.ErrorResponse{Error: err.Error()}
+		core.MakeErrorResponse(writer, &response)
+		return
+	}
+
 	request.ParseForm()
-	newPost := models.Post{Title: request.Form.Get("title"), Content: request.Form.Get("content"), AuthorID: session.Values["userID"].(uint64)}
+	userId, _ := strconv.ParseInt(request.Form.Get("userId"), 10, 64)
+	newPost.AuthorID = uint64(userId)
 
 	postRepository.Create(newPost)
 
